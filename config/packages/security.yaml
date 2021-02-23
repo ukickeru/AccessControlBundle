@@ -1,0 +1,39 @@
+security:
+    encoders:
+        ukickeru\AccessControlBundle\Model\User:
+            algorithm: auto
+
+    providers:
+        db_user_provider:
+            entity:
+                class: ukickeru\AccessControlBundle\Model\User
+                property: username
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            pattern: ^/
+            anonymous: true
+            lazy: false
+            provider: db_user_provider
+            remember_me:
+                secret:   '%kernel.secret%'
+                lifetime: 86400
+                path:     /
+            guard:
+                authenticators:
+                    - ukickeru\AccessControlBundle\Application\Security\AppAuthenticator
+            logout:
+                path: logout
+                target: login
+
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: [IS_AUTHENTICATED_FULLY, ROLE_USER] }

@@ -1,0 +1,5 @@
+access_control_routes:
+    type: annotation
+    resource: '../src/Infrastructure/Controller/'
+    # prefix:   /admin
+    # name_prefix: access_control.

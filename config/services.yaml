@@ -1,0 +1,15 @@
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    ukickeru\AccessControlBundle\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+
+    ukickeru\AccessControlBundle\Infrastructure\Controller\:
+        resource: '../src/Infrastructure/Controller'
+        tags: ['controller.service_arguments']

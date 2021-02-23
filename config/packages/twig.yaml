@@ -1,0 +1,3 @@
+twig:
+    paths:
+        '%kernel.project_dir%/vendor/ukickeru/access-control-bundle/src/Application/View': access-control-bundle
