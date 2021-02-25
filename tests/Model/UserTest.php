@@ -4,14 +4,14 @@ namespace Components\AccessControl\Tests;
 
 use App\Util\Calculator;
 use PHPUnit\Framework\TestCase;
-use Components\AccessControl\Model\Group;
+use Components\AccessControl\Model\User;
 use ukickeru\AccessControlBundle\UseCase\AccessControlUseCase;
 
-class GroupTest extends TestCase
+class UserTest extends TestCase
 {
     public function testUserCreation()
     {
-        $group = new Group();
+        $user = new User();
 
         $this->assertSame('test', $user->getName());
     }

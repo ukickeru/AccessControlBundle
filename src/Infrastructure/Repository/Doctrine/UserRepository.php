@@ -8,6 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ukickeru\AccessControlBundle\Infrastructure\Repository\UserRepositoryInterface;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -15,7 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @method User[]    findAll()
  * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
+class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -33,6 +34,38 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         $user->setPassword($newEncodedPassword);
         $this->_em->persist($user);
+        $this->_em->flush();
+    }
+
+    public function getAll(): array
+    {
+        return $this->findAll();
+    }
+
+    public function getOneById(string $id): User
+    {
+        return $this->find($id);
+    }
+
+    public function save(User $user): User
+    {
+        $this->_em->persist($user);
+        $this->_em->flush();
+        
+        return $user;
+    }
+
+    public function update(User $user): User
+    {
+        $this->_em->persist($user);
+        $this->_em->flush();
+        
+        return $user;
+    }
+
+    public function remove(User $user): void
+    {
+        $this->_em->remove($user);
         $this->_em->flush();
     }
 }

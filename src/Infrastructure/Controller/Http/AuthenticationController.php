@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use ukickeru\AccessControlBundle\Model\ApplicationRoutesContainer;
+use ukickeru\AccessControlBundle\Application\Integration\AccessControlRoutesContainer;
 
 class AuthenticationController extends AbstractController
 {
@@ -30,7 +32,7 @@ class AuthenticationController extends AbstractController
     /**
      * @Route("/login", name="login")
      */
-    public function login(): Response
+    public function login(ApplicationRoutesContainer $routesContainer): Response
     {
         if ($this->getUser()) {
             return $this->redirectToRoute($this->pathToRedirectAfterLogin);

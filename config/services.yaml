@@ -8,6 +8,7 @@ services:
     ukickeru\AccessControlBundle\:
         resource: '../src/'
         exclude:
+            - '../src/Model/'
             - '../src/DependencyInjection/'
 
     ukickeru\AccessControlBundle\Infrastructure\Controller\:

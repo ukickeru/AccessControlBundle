@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use ukickeru\AccessControlBundle\Infrastructure\Controller\Http\AuthenticationController;
 use ukickeru\AccessControlBundle\Application\Security\AppAuthenticator;
+use ukickeru\AccessControlBundle\Model\RoutesContainerInterface;
 
 class AccessControlExtension extends Extension implements PrependExtensionInterface
 {
@@ -32,6 +33,9 @@ class AccessControlExtension extends Extension implements PrependExtensionInterf
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        $container->registerForAutoconfiguration(RoutesContainerInterface::class)
+          ->addTag('ukickeru.access-control.routes-container');
+
         $loader = new YamlFileLoader(
             $container,
             new FileLocator(__DIR__.'/../../config')
