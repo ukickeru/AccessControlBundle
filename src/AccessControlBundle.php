@@ -3,7 +3,6 @@ namespace ukickeru\AccessControlBundle;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use ukickeru\AccessControlBundle\DependencyInjection\Compiler\ApplicationRoutesContainerRegistrationPass;
 
 class AccessControlBundle extends Bundle
 {
@@ -13,7 +12,6 @@ class AccessControlBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
-        $container->addCompilerPass(new ApplicationRoutesContainerRegistrationPass());
     }
 
     /**

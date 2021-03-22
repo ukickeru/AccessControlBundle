@@ -9,7 +9,6 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use ukickeru\AccessControlBundle\Infrastructure\Controller\Http\AuthenticationController;
 use ukickeru\AccessControlBundle\Application\Security\AppAuthenticator;
-use ukickeru\AccessControlBundle\Model\RoutesContainerInterface;
 
 class AccessControlExtension extends Extension implements PrependExtensionInterface
 {
@@ -33,9 +32,6 @@ class AccessControlExtension extends Extension implements PrependExtensionInterf
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $container->registerForAutoconfiguration(RoutesContainerInterface::class)
-          ->addTag('ukickeru.access-control.routes-container');
-
         $loader = new YamlFileLoader(
             $container,
             new FileLocator(__DIR__.'/../../config')
@@ -44,16 +40,16 @@ class AccessControlExtension extends Extension implements PrependExtensionInterf
 
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-        
+
         $definition = $container->getDefinition(AppAuthenticator::class);
         $definition->setArguments([
-          '$indexPath' => $config['index_path'],
+          '$indexPath' => $config['paths']['index_path'],
         ]);
         
         $definition = $container->getDefinition(AuthenticationController::class);
         $definition->setArguments([
-          '$pathToRedirectAfterLogin' => $config['redirect_after_login_path'],
-          '$pathToRedirectAfterLogout' => $config['redirect_after_logout_path'],
+          '$pathToRedirectAfterLogin' => $config['paths']['redirect_after_login_path'],
+          '$pathToRedirectAfterLogout' => $config['paths']['redirect_after_logout_path'],
         ]);
     }
 }

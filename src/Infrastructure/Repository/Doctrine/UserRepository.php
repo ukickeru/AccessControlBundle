@@ -2,13 +2,16 @@
 
 namespace ukickeru\AccessControlBundle\Infrastructure\Repository\Doctrine;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use DomainException;
 use ukickeru\AccessControlBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use ukickeru\AccessControlBundle\Infrastructure\Repository\UserRepositoryInterface;
+use ukickeru\AccessControlBundle\UseCase\UserRepositoryInterface;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -24,7 +27,79 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
+     * @return User[]
+     */
+    public function getAll(): array
+    {
+        return $this->findAll();
+    }
+
+    /**
+     * @param string $id
+     * @return User
+     */
+    public function getOne(string $id): User
+    {
+        $user = $this->find($id);
+
+        if ($user === null) {
+            throw new DomainException('Пользователь с ID = "'.$id.'" не найден!');
+        }
+
+        return $user;
+    }
+
+    /**
+     * @param User $user
+     * @return User
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function save(User $user): User
+    {
+        $this->_em->persist($user);
+        $this->_em->flush();
+
+        return $user;
+    }
+
+    /**
+     * @param User $user
+     * @return User
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function update(User $user): User
+    {
+        $this->_em->persist($user);
+        $this->_em->flush();
+        
+        return $user;
+    }
+
+    /**
+     * @param string $id
+     * @return bool
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws DomainException
+     */
+    public function remove(string $id): bool
+    {
+        $user = $this->getOne($id);
+
+        $this->_em->remove($user);
+        $this->_em->flush();
+
+        return true;
+    }
+
+    /**
      * Used to upgrade (rehash) the user's password automatically over time.
+     * @param UserInterface $user
+     * @param string $newEncodedPassword
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
     {
@@ -34,38 +109,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         $user->setPassword($newEncodedPassword);
         $this->_em->persist($user);
-        $this->_em->flush();
-    }
-
-    public function getAll(): array
-    {
-        return $this->findAll();
-    }
-
-    public function getOneById(string $id): User
-    {
-        return $this->find($id);
-    }
-
-    public function save(User $user): User
-    {
-        $this->_em->persist($user);
-        $this->_em->flush();
-        
-        return $user;
-    }
-
-    public function update(User $user): User
-    {
-        $this->_em->persist($user);
-        $this->_em->flush();
-        
-        return $user;
-    }
-
-    public function remove(User $user): void
-    {
-        $this->_em->remove($user);
         $this->_em->flush();
     }
 }

@@ -1,0 +1,3 @@
+doctrine_migrations:
+    migrations_paths:
+        'AccessControlBundleMigrations': '%kernel.project_dir%/vendor/ukickeru/access-control-bundle/src/Application/DataFixtures/Doctrine'

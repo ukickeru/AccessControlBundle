@@ -1,13 +1,51 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Портал научной работы{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+{% extends 'base.html.twig' %}
 
-        {% block javascripts %}{% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
-</html>
+{% block body %}
+    <h1 class="h5 font-weight-light text-left my-1">Модуль контроля доступа</h1>
+    <ul class="nav nav-pills nav-fill border-top border-bottom my-2">
+        {% set currentPath = path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params')) %}
+        <li class="nav-item">
+            {% apply spaceless %}
+            <a class="nav-link
+                {% if ( currentPath is same as (path('app_index')) ) %}
+                    active
+                {% endif %}"
+                href="{{  path('app_index') }}"
+            >
+                Главная
+            </a>
+            {% endapply %}
+        </li>
+        <li class="nav-item">
+            {% apply spaceless %}
+                <a class="nav-link
+                    {% if ( currentPath is same as (path('user_index')) ) or ( path('user_index') in currentPath ) %}
+                        active
+                    {% endif %}"
+                    href="{{  path('user_index') }}"
+                >
+                    Пользователи
+                </a>
+            {% endapply %}
+        </li>
+        <li class="nav-item">
+            {% apply spaceless %}
+                <a class="nav-link
+                    {% if ( currentPath is same as (path('group_index')) ) or ( path('group_index') in currentPath ) %}
+                        active
+                    {% endif %}"
+                    href="{{  path('group_index') }}"
+                >
+                    Группы
+                </a>
+            {% endapply %}
+        </li>
+    </ul>
+    {% block acl_page_header %}
+        <h1 class="h4 font-weight-light mt-4">{% block acl_page_header_text %}{% endblock %}</h1>
+    {% endblock %}
+    <div class="my-3">
+        {% block acl_page_body %}
+        {% endblock %}
+    </div>
+{% endblock %}

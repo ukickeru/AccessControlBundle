@@ -11,6 +11,12 @@ services:
             - '../src/Model/'
             - '../src/DependencyInjection/'
 
+    ukickeru\AccessControlBundle\Model\Routes\:
+        resource: '../src/Model/Routes/'
+
+    ukickeru\AccessControlBundle\Model\Routes\RoutesGetterInterface:
+        class: 'ukickeru\AccessControlBundle\Model\Routes\RoutesGetter'
+
     ukickeru\AccessControlBundle\Infrastructure\Controller\:
         resource: '../src/Infrastructure/Controller'
         tags: ['controller.service_arguments']

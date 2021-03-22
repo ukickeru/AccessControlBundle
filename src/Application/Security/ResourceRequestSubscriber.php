@@ -6,6 +6,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Security;
+use ukickeru\AccessControlBundle\Model\User;
 
 class ResourceRequestSubscriber implements EventSubscriberInterface
 {
@@ -27,11 +28,20 @@ class ResourceRequestSubscriber implements EventSubscriberInterface
 
     public function checkIfResourceAvailableForUser(ControllerEvent $event)
     {
+        /** @var User $user */
         $user = $this->security->getUser();
-        $requestedPath = $event->getRequest()->getPathInfo();
+        $request = $event->getRequest();
+        $requestedRoutePath = $request->getPathInfo();
+        $requestedRouteName = $request->get('_route');
 
-        /*
-         * @todo: check if user allow to request path
-         */
+        if (
+            $user instanceof User &&
+            !(
+                is_string($requestedRoutePath) && $user->isRouteAvailable($requestedRoutePath) ||
+                is_string($requestedRouteName) && $user->isRouteAvailable($requestedRouteName)
+            )
+        ) {
+            throw new \DomainException('Доступ к запрашиваемому ресурсу запрещён!');
+        }
     }
 }

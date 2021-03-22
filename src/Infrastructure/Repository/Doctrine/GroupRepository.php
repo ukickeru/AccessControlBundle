@@ -2,10 +2,13 @@
 
 namespace ukickeru\AccessControlBundle\Infrastructure\Repository\Doctrine;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use DomainException;
 use ukickeru\AccessControlBundle\Model\Group;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use ukickeru\AccessControlBundle\Infrastructure\Repository\GroupRepositoryInterface;
+use ukickeru\AccessControlBundle\UseCase\GroupRepositoryInterface;
 
 /**
  * @method Group|null find($id, $lockMode = null, $lockVersion = null)
@@ -20,35 +23,72 @@ class GroupRepository extends ServiceEntityRepository implements GroupRepository
         parent::__construct($registry, Group::class);
     }
 
+    /**
+     * @return Group[]
+     */
     public function getAll(): array
     {
         return $this->findAll();
     }
 
-    public function getOneById(string $id): Group
+    /**
+     * @param string $id
+     * @return Group
+     * @throws DomainException
+     */
+    public function getOne(string $id): Group
     {
-        return $this->find($id);
+        $group = $this->find($id);
+
+        if ($group === null) {
+            throw new DomainException('Пользовательская группа с ID = "'.$id.'" не найдена!');
+        }
+
+        return $group;
     }
 
-    public function save(Group $user): Group
+    /**
+     * @param Group $group
+     * @return Group
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function save(Group $group): Group
     {
-        $this->_em->persist($user);
+        $this->_em->persist($group);
         $this->_em->flush();
         
-        return $user;
+        return $group;
     }
 
-    public function update(Group $user): Group
+    /**
+     * @param Group $group
+     * @return Group
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function update(Group $group): Group
     {
-        $this->_em->persist($user);
+        $this->_em->persist($group);
         $this->_em->flush();
-        
-        return $user;
+
+        return $group;
     }
 
-    public function remove(Group $user): void
+    /**
+     * @param string $id
+     * @return bool
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws DomainException
+     */
+    public function remove(string $id): bool
     {
-        $this->_em->remove($user);
+        $group = $this->getOne($id);
+
+        $this->_em->remove($group);
         $this->_em->flush();
+
+        return true;
     }
 }

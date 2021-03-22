@@ -1,0 +1,15 @@
+{% extends '@access-control-bundle/User/base.html.twig' %}
+
+{% block title %}Создать новую группу{% endblock %}
+
+{% block acl_page_header_text %}Создать новую группу{% endblock %}
+
+{% block acl_page_body %}
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <div class="d-flex align-items-center justify-content-left">
+            <button class="btn btn-outline-success mx-2">{{ button_label|default('Сохранить') }}</button>
+            <a class="btn btn-outline-primary mx-2" href="{{ path('group_index') }}">Назад к списку</a>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}

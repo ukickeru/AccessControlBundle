@@ -1,0 +1,26 @@
+{% extends '@access-control-bundle/Group/base.html.twig' %}
+
+{% block title %}Редактировать группу "{{ group.name }}"{% endblock %}
+
+{% block acl_page_header_text %}Редактировать группу "{{ group.name }}"{% endblock %}
+
+{% block acl_page_body %}
+    <div class="wrapper pb-3">
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <div class="d-flex justify-content-left align-items-center">
+                <div class="mr-1">
+                    <button type="submit" class="btn btn-outline-success mr-2">{{ button_label|default('Сохранить') }}</button>
+                </div>
+                <div class="mx-1">
+                    <a class="btn btn-outline-primary" href="{{ path('group_index') }}">Назад к списку</a>
+                </div>
+            </div>
+        {{ form_end(form) }}
+    </div>
+    <div class="d-flex justify-content-end align-items-center">
+        <div class="ml-1">
+            {{ include('@access-control-bundle/Group/_delete_form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}

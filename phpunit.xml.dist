@@ -29,6 +29,10 @@
         <env name="DATABASE_URL" value="postgresql://db_user:db_password@127.0.0.1:5432/db_name?serverVersion=13&amp;charset=utf8"/>
         <!-- ###- doctrine/doctrine-bundle ### -->
 
+        <extensions>
+            <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
+        </extensions>
+
         <!-- ###+ symfony/mailer ### -->
         <!-- MAILER_DSN=smtp://localhost -->
         <!-- ###- symfony/mailer ### -->
