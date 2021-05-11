@@ -121,7 +121,7 @@ class AccessControlUseCase
         $userDTOs = [];
 
         foreach ($this->userRepository->getAll() as $user) {
-            $userDTOs[] = GroupDTO::createFromGroup($user);
+            $userDTOs[] = UserDTO::createFromUser($user);
         }
 
         return $userDTOs;

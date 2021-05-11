@@ -11,6 +11,9 @@ services:
             - '../src/Model/'
             - '../src/DependencyInjection/'
 
+    ukickeru\AccessControlBundle\Model\Fixtures\Fixtures:
+        class: 'ukickeru\AccessControlBundle\Model\Fixtures\Fixtures'
+
     ukickeru\AccessControlBundle\Model\Routes\:
         resource: '../src/Model/Routes/'
 

@@ -41,7 +41,7 @@ class ResourceRequestSubscriber implements EventSubscriberInterface
                 is_string($requestedRouteName) && $user->isRouteAvailable($requestedRouteName)
             )
         ) {
-            throw new \DomainException('Доступ к запрашиваемому ресурсу запрещён!');
+//            throw new \DomainException('Доступ к запрашиваемому ресурсу запрещён!');
         }
     }
 }

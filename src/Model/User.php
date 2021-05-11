@@ -7,7 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\UserInterface;
-use ukickeru\AccessControlBundle\Model\Group;
 use ukickeru\AccessControlBundle\Model\Routes\ApplicationRoutesContainer;
 
 /**
@@ -244,16 +243,32 @@ class User implements UserInterface
         return  $this;
     }
 
+    /**
+     * @return array|string[]
+     */
     public function getAvailableRoutes(): array
     {
         $availableRoutes = [];
 
         foreach ($this->getGroups() as $group) {
-            $availableRoutes[] = $group->getAvailableRoutes();
+            $availableRoutes = array_merge(
+                $availableRoutes,
+                $group->getAvailableRoutes()
+            );
         }
 
         if (empty($availableRoutes)) {
-            return ApplicationRoutesContainer::GUARANTEED_ACCESSIBLE_ROUTES;
+            $availableRoutes = array_merge(
+                $availableRoutes,
+                ApplicationRoutesContainer::GUARANTEED_ACCESSIBLE_ROUTES
+            );
+        }
+
+        if ($this->isAdmin()) {
+            $availableRoutes = array_merge(
+                $availableRoutes,
+                ApplicationRoutesContainer::GUARANTEED_ACCESSIBLE_ROUTES_FOR_ADMIN
+            );
         }
 
         return array_unique($availableRoutes);

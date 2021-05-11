@@ -13,6 +13,7 @@
                     <th>Имя</th>
                     <th>Администратор</th>
                     <th>Группы</th>
+                    <th>Доступные маршруты</th>
                     <th>Действия</th>
                 </tr>
             </thead>
@@ -31,12 +32,26 @@
                     <td class="vertical-align-middle">
                         {% if ( user.groups is not empty ) %}
                             <p class="mb-0">
-                                <a class="link" data-toggle="collapse" href="#groups-{{ loop.index }}" role="button" aria-expanded="false" aria-controls="groups-{{ loop.index }}">
+                                <a class="link" data-bs-toggle="collapse" href="#groups-{{ loop.index }}" role="button" aria-expanded="false" aria-controls="groups-{{ loop.index }}">
                                     Развернуть/свернуть
                                 </a>
                             </p>
                             <span class="collapse" id="groups-{{ loop.index }}">
                                 {{ user.groups|join(', ') }}
+                            </span>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="vertical-align-middle">
+                        {% if ( user.availableRoutes is not empty ) %}
+                            <p class="mb-0">
+                                <a class="link" data-bs-toggle="collapse" href="#availableRoutes-{{ loop.index }}" role="button" aria-expanded="false" aria-controls="groups-{{ loop.index }}">
+                                    Развернуть/свернуть
+                                </a>
+                            </p>
+                            <span class="collapse" id="availableRoutes-{{ loop.index }}">
+                                {{ user.availableRoutes|join(', ') }}
                             </span>
                         {% else %}
                             -

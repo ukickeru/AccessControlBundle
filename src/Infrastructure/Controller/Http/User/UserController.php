@@ -42,7 +42,7 @@ class UserController extends AbstractController
      */
     public function index(): Response
     {
-        $users = $this->userRepository->getAll();
+        $users = $this->useCase->getAllUsers();
 
         return $this->render('@access-control-bundle/User/index.html.twig', [
             'users' => $users,

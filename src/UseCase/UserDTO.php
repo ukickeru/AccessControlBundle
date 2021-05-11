@@ -26,6 +26,9 @@ class UserDTO
     /** @var Group[]|array */
     public $groups = [];
 
+    /** @var array|string[] */
+    public $availableRoutes = [];
+
     /** @var boolean */
     public $admin;
 
@@ -36,6 +39,7 @@ class UserDTO
         $userDTO->password = $user->getPassword();
         $userDTO->roles = $user->getRoles();
         $userDTO->groups = $user->getGroups();
+        $userDTO->availableRoutes = $user->getAvailableRoutes();
         $userDTO->admin = $user->isAdmin();
 
         return $userDTO;
@@ -104,6 +108,22 @@ class UserDTO
             $this->groups = [];
         } else {
             $this->groups = $groups;
+        }
+
+        return $this;
+    }
+
+    public function getAvailableRoutes(): iterable
+    {
+        return $this->availableRoutes;
+    }
+
+    public function setAvailableRoutes(?iterable $availableRoutes): self
+    {
+        if ($availableRoutes === null) {
+            $this->availableRoutes = [];
+        } else {
+            $this->availableRoutes = $availableRoutes;
         }
 
         return $this;
