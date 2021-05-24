@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use ukickeru\AccessControlBundle\Model\Routes\ApplicationRoutesContainer;
+use ukickeru\AccessControl\Model\Routes\ApplicationRoutesContainer;
 
 class AuthenticationController extends AbstractController
 {
@@ -28,7 +28,7 @@ class AuthenticationController extends AbstractController
     }
 
     /**
-     * @Route(ApplicationRoutesContainer::LOGIN_ROUTE_PATH, name="login")
+     * @Route(ApplicationRoutesContainer::LOGIN_ROUTE_PATH, name="app_login")
      */
     public function login(): Response
     {
@@ -44,7 +44,7 @@ class AuthenticationController extends AbstractController
     }
 
     /**
-     * @Route(ApplicationRoutesContainer::LOGOUT_ROUTE_PATH, name="logout")
+     * @Route(ApplicationRoutesContainer::LOGOUT_ROUTE_PATH, name="app_logout")
      */
     public function logout()
     {

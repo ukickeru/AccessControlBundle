@@ -5,20 +5,13 @@ services:
         autowire: true
         autoconfigure: true
 
+    ukickeru\AccessControl\:
+        resource: '%kernel.project_dir%/vendor/ukickeru/access-control/src/'
+
     ukickeru\AccessControlBundle\:
         resource: '../src/'
         exclude:
-            - '../src/Model/'
             - '../src/DependencyInjection/'
-
-    ukickeru\AccessControlBundle\Model\Fixtures\Fixtures:
-        class: 'ukickeru\AccessControlBundle\Model\Fixtures\Fixtures'
-
-    ukickeru\AccessControlBundle\Model\Routes\:
-        resource: '../src/Model/Routes/'
-
-    ukickeru\AccessControlBundle\Model\Routes\RoutesGetterInterface:
-        class: 'ukickeru\AccessControlBundle\Model\Routes\RoutesGetter'
 
     ukickeru\AccessControlBundle\Infrastructure\Controller\:
         resource: '../src/Infrastructure/Controller'

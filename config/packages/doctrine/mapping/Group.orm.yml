@@ -1,0 +1,60 @@
+ukickeru\AccessControl\Model\Group:
+  type: entity
+  repositoryClass: ukickeru\AccessControlBundle\Infrastructure\Repository\Doctrine\GroupRepository
+  table: "`group`"
+  indexes:
+    name_index:
+      columns: [ id ]
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+      options:
+        unsigned: true
+
+  fields:
+    name:
+      type: string
+      length: 255
+      unique: true
+      nullable: false
+    creationDate:
+      type: date
+      nullable: false
+    availableRoutes:
+      type: simple_array
+      nullable: true
+
+  oneToOne:
+    parentGroup:
+      targetEntity: ukickeru\AccessControl\Model\Group
+      joinColumn:
+        name: parent_group_id
+        referencedColumnName: id
+        onDelete: SET NULL
+
+  manyToOne:
+    creator:
+      targetEntity: ukickeru\AccessControl\Model\User
+      joinColumn:
+        name: creator
+        referencedColumnName: id
+        onDelete: CASCADE
+
+  manyToMany:
+    users:
+      targetEntity: ukickeru\AccessControl\Model\User
+      joinTable:
+        name: users_groups
+        cascade: ["persist", "remove"]
+        joinColumns:
+          group_id:
+            referencedColumnName: id
+        inverseJoinColumns:
+          user_id:
+            referencedColumnName: id
+
+  lifecycleCallbacks:
+    prePersist: [ setCreationDate ]

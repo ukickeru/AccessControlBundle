@@ -3,13 +3,13 @@
 namespace ukickeru\AccessControlBundle\Infrastructure\Controller\Http\Group;
 
 use ukickeru\AccessControlBundle\Application\Presenters\Group\GroupType;
-use ukickeru\AccessControlBundle\UseCase\GroupRepositoryInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use ukickeru\AccessControl\UseCase\GroupRepositoryInterface;
+use ukickeru\AccessControlBundle\Infrastructure\Controller\Http\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use ukickeru\AccessControlBundle\UseCase\AccessControlUseCase;
-use ukickeru\AccessControlBundle\UseCase\GroupDTO;
+use ukickeru\AccessControl\UseCase\AccessControlUseCase;
+use ukickeru\AccessControl\UseCase\GroupDTO;
 
 /**
  * @Route("/groups")
@@ -22,7 +22,7 @@ class GroupController extends AbstractController
     private $useCase;
 
     /**
-     * @var \ukickeru\AccessControlBundle\UseCase\GroupRepositoryInterface
+     * @var \ukickeru\AccessControl\UseCase\GroupRepositoryInterface
      */
     private $groupRepository;
 

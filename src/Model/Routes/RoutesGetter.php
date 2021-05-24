@@ -2,11 +2,12 @@
 
 namespace ukickeru\AccessControlBundle\Model\Routes;
 
+use DomainException;
 use Psr\Container\ContainerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Routing\Route as FrameworkRoute;
-use ukickeru\AccessControlBundle\Model\Routes\Route;
-use ukickeru\AccessControlBundle\Model\Routes\RoutesGetterInterface;
+use ukickeru\AccessControl\Model\Routes\Route;
+use ukickeru\AccessControl\Model\Routes\RoutesGetterInterface;
 
 class RoutesGetter implements RoutesGetterInterface
 {

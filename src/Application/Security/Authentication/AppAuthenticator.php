@@ -1,8 +1,8 @@
 <?php
 
-namespace ukickeru\AccessControlBundle\Application\Security;
+namespace ukickeru\AccessControlBundle\Application\Security\Authentication;
 
-use ukickeru\AccessControlBundle\Model\User;
+use ukickeru\AccessControl\Model\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +18,6 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class AppAuthenticator extends AbstractFormLoginAuthenticator
 {
@@ -58,6 +57,7 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator
             'password' => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
+
         $request->getSession()->set(
             Security::LAST_USERNAME,
             $credentials['username']
@@ -66,7 +66,13 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator
         return $credentials;
     }
 
-    public function getUser($credentials, UserProviderInterface $userProvider)
+    /**
+     * @param mixed $credentials
+     * @param UserProviderInterface $userProvider
+     * @return UserInterface|null
+     * @throw CustomUserMessageAuthenticationException|InvalidCsrfTokenException
+     */
+    public function getUser($credentials, UserProviderInterface $userProvider): UserInterface
     {
         $token = new CsrfToken('authenticate', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
@@ -79,7 +85,7 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator
             throw new CustomUserMessageAuthenticationException('Username could not be found.');
         }
 
-        return $user;
+        return new UserAdapter($user);
     }
 
     public function getPassword($credentials): ?string
@@ -87,9 +93,16 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator
         return $credentials['password'];
     }
 
-    public function checkCredentials($credentials, UserInterface $user)
+    /**
+     * @param mixed $credentials
+     * @param UserInterface|UserAdapter $userAdapter
+     * @return bool
+     */
+    public function checkCredentials($credentials, UserInterface $userAdapter)
     {
-        return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
+        $user = $userAdapter->getUser();
+
+        return $this->passwordEncoder->isPasswordValid($userAdapter, $credentials['password']);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey)

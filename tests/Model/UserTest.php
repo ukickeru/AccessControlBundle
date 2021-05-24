@@ -3,8 +3,8 @@
 namespace ukickeru\AccessControlBundle\Tests\Model;
 
 use PHPUnit\Framework\TestCase;
-use ukickeru\AccessControlBundle\Model\Group;
-use ukickeru\AccessControlBundle\Model\User;
+use ukickeru\AccessControl\Model\Group;
+use ukickeru\AccessControl\Model\User;
 
 class UserTest extends TestCase
 {

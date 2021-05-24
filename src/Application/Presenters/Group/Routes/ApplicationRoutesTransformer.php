@@ -3,8 +3,8 @@
 namespace ukickeru\AccessControlBundle\Application\Presenters\Group\Routes;
 
 use Symfony\Component\Form\DataTransformerInterface;
-use ukickeru\AccessControlBundle\Model\Routes\ApplicationRoutesContainer;
-use ukickeru\AccessControlBundle\Model\Routes\Route;
+use ukickeru\AccessControl\Model\Routes\ApplicationRoutesContainer;
+use ukickeru\AccessControl\Model\Routes\Route;
 
 class ApplicationRoutesTransformer implements DataTransformerInterface
 {

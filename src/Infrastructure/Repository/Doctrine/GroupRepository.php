@@ -5,10 +5,10 @@ namespace ukickeru\AccessControlBundle\Infrastructure\Repository\Doctrine;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use DomainException;
-use ukickeru\AccessControlBundle\Model\Group;
+use ukickeru\AccessControl\Model\Group;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use ukickeru\AccessControlBundle\UseCase\GroupRepositoryInterface;
+use ukickeru\AccessControl\UseCase\GroupRepositoryInterface;
 
 /**
  * @method Group|null find($id, $lockMode = null, $lockVersion = null)
@@ -36,7 +36,7 @@ class GroupRepository extends ServiceEntityRepository implements GroupRepository
      * @return Group
      * @throws DomainException
      */
-    public function getOne(string $id): Group
+    public function getOneById(string $id): Group
     {
         $group = $this->find($id);
 

@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use ukickeru\AccessControlBundle\Infrastructure\Controller\Http\AuthenticationController;
-use ukickeru\AccessControlBundle\Application\Security\AppAuthenticator;
+use ukickeru\AccessControlBundle\Application\Security\Authentication\AppAuthenticator;
 
 class AccessControlExtension extends Extension implements PrependExtensionInterface
 {

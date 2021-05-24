@@ -4,13 +4,15 @@ namespace ukickeru\AccessControlBundle\Application\Presenters\User;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use ukickeru\AccessControlBundle\UseCase\AccessControlUseCase;
-use ukickeru\AccessControlBundle\UseCase\ChangeAdminPermissionsDTO;
-use ukickeru\AccessControlBundle\UseCase\UserDTO;
-use ukickeru\AccessControlBundle\UseCase\UserRepositoryInterface;
+use ukickeru\AccessControl\Model\User;
+use ukickeru\AccessControl\UseCase\AccessControlUseCase;
+use ukickeru\AccessControl\UseCase\ChangeAdminPermissionsDTO;
+use ukickeru\AccessControl\UseCase\UserDTO;
+use ukickeru\AccessControl\UseCase\UserRepositoryInterface;
 
 class ChangeAdminPermissionsType extends AbstractType
 {
@@ -28,12 +30,16 @@ class ChangeAdminPermissionsType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $useCase = $this->useCase;
+
         $builder
-            ->add('newAdminId', EntityType::class, [
+            ->add('newAdmin', EntityType::class, [
                 'label' => 'Пользователь',
                 'placeholder' => 'Выберите пользователя, которому будут переданы права',
-                'class' => UserDTO::class,
-                'choice_loader' => $this->useCase->getAllUsers(),
+                'class' => User::class,
+                'choice_loader' => new CallbackChoiceLoader(function() use ($useCase) {
+                    return $useCase->getAllUsers();
+                }),
                 'choice_value' => 'id',
                 'choice_label' => 'userName'
             ])

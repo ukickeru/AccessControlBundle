@@ -5,7 +5,7 @@ namespace ukickeru\AccessControlBundle\Application\DataFixtures\Doctrine\Test;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use ukickeru\AccessControlBundle\Model\User;
+use ukickeru\AccessControl\Model\User;
 
 class AccessControlBundleFixtures extends Fixture
 {

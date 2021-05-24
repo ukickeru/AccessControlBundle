@@ -3,19 +3,16 @@
 namespace ukickeru\AccessControlBundle\Infrastructure\Controller\Http\User;
 
 use ukickeru\AccessControlBundle\Application\Presenters\User\ChangeAdminPermissionsType;
-use ukickeru\AccessControlBundle\UseCase\ChangeAdminPermissionsDTO;
-use ukickeru\AccessControlBundle\UseCase\UserRepositoryInterface;
+use ukickeru\AccessControl\UseCase\ChangeAdminPermissionsDTO;
+use ukickeru\AccessControl\UseCase\UserRepositoryInterface;
 use ukickeru\AccessControlBundle\Application\Presenters\User\UserType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use ukickeru\AccessControlBundle\Infrastructure\Controller\Http\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use ukickeru\AccessControlBundle\UseCase\AccessControlUseCase;
-use ukickeru\AccessControlBundle\UseCase\UserDTO;
+use ukickeru\AccessControl\UseCase\AccessControlUseCase;
+use ukickeru\AccessControl\UseCase\UserDTO;
 
-/**
- * @Route("/users")
- */
 class UserController extends AbstractController
 {
     /**
@@ -38,7 +35,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/", name="user_index", methods={"GET"})
+     * @Route("/users/", name="user_index", methods={"GET"})
      */
     public function index(): Response
     {
@@ -50,7 +47,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="user_new", methods={"GET","POST"})
+     * @Route("/users/new", name="user_new", methods={"GET","POST"})
      * @param Request $request
      * @return Response
      */
@@ -73,7 +70,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="user_show", methods={"GET"})
+     * @Route("/users/{id}", name="user_show", methods={"GET"})
      * @param string $id
      * @return Response
      */
@@ -92,7 +89,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="user_edit", methods={"GET","POST"})
+     * @Route("/users/{id}/edit", name="user_edit", methods={"GET","POST"})
      * @param Request $request
      * @param string $id
      * @return Response
@@ -122,7 +119,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="user_delete", methods={"DELETE"})
+     * @Route("/users/{id}", name="user_delete", methods={"DELETE"})
      * @param Request $request
      * @param string $id
      * @return Response
@@ -142,30 +139,34 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/change_admin/", name="change_admin", methods={"GET"})
+     * @Route("/change_admin", name="change_admin", methods={"GET","POST"})
      * @param Request $request
-     * @param string $id
      * @return Response
      */
-    public function changeAdmin(Request $request, string $id): Response
+    public function changeAdmin(Request $request): Response
     {
-        try {
-            $newAdminId = $request->get('newAdminId');
-            $user = $this->useCase->getUser($newAdminId);
-        } catch (\Exception $exception) {
-            $this->addFlash('error',$exception->getMessage());
-            return $this->redirectToRoute('group_index');
-        }
+        $user = $this->getUser();
 
         $form = $this->createForm(ChangeAdminPermissionsType::class, new ChangeAdminPermissionsDTO());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->useCase->turnAdministrativePermissionsToAnotherUser($newAdminId);
+            $newAdmin = $form->get('newAdmin');
+            $confirmed = $request->get('confirmed');
+            $turnAdministrativePermissionsDTO = new ChangeAdminPermissionsDTO($newAdmin,$confirmed);
 
-            return $this->redirectToRoute('user_index');
+            try {
+                $this->useCase->turnAdministrativePermissionsToAnotherUser($turnAdministrativePermissionsDTO);
+            } catch (\Exception $exception) {
+                $this->addFlash('error',$exception->getMessage());
+            }
+
+            return $this->redirectToRoute('user_edit', ['id' => $user->getId()]);
         }
 
-        return $this->redirectToRoute('user_edit', ['id' => $id]);
+        return $this->render('@access-control-bundle/User/change_admin.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
+        ]);
     }
 }

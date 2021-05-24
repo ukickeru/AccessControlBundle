@@ -1,0 +1,45 @@
+ukickeru\AccessControl\Model\User:
+  type: entity
+  repositoryClass: ukickeru\AccessControlBundle\Infrastructure\Repository\Doctrine\UserRepository
+  table: "`user`"
+  indexes:
+    name_index:
+      columns: [ id ]
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+      options:
+        unsigned: true
+
+  fields:
+    username:
+      type: string
+      length: 180
+      unique: true
+      nullable: false
+    password:
+      type: string
+      nullable: false
+    roles:
+      type: array
+    admin:
+      type: boolean
+      nullable: false
+      options:
+        default: false
+
+  manyToMany:
+    groups:
+      targetEntity: ukickeru\AccessControl\Model\Group
+      joinTable:
+        name: users_groups
+        joinColumns:
+          user_id:
+            referencedColumnName: id
+        inverseJoinColumns:
+          group_id:
+            referencedColumnName: id
+      fetch: EAGER

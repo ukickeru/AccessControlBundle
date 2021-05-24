@@ -6,7 +6,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Security;
-use ukickeru\AccessControlBundle\Model\User;
+use ukickeru\AccessControl\Model\User;
 
 class ResourceRequestSubscriber implements EventSubscriberInterface
 {

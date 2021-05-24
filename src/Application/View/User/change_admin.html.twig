@@ -1,0 +1,21 @@
+{% extends '@access-control-bundle/User/base.html.twig' %}
+
+{% block title %}Передать административные права пользователя "{{ user.userName }}"{% endblock %}
+
+{% block acl_page_header_text %}Передать административные права пользователя "{{ user.userName }}"{% endblock %}
+
+{% block acl_page_body %}
+    <div class="wrapper pb-3">
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <div class="d-flex justify-content-left align-items-center">
+                <div class="mr-1">
+                    <button type="submit" class="btn btn-outline-success mr-2">{{ button_label|default('Передать административные права') }}</button>
+                </div>
+                <div class="mx-1">
+                    <a class="btn btn-outline-primary" href="{{ path('user_edit', {'id': user.id}) }}">Назад к редактированию пользователя</a>
+                </div>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

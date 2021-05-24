@@ -11,9 +11,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use ukickeru\AccessControlBundle\Model\Group;
-use ukickeru\AccessControlBundle\Model\Routes\ApplicationRoutesContainer;
-use ukickeru\AccessControlBundle\Model\User;
+use ukickeru\AccessControl\Model\Group;
+use ukickeru\AccessControl\Model\Routes\ApplicationRoutesContainer;
+use ukickeru\AccessControl\Model\User;
 
 class GroupType extends AbstractType
 {
@@ -72,7 +72,7 @@ class GroupType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => \ukickeru\AccessControlBundle\UseCase\GroupDTO::class,
+            'data_class' => \ukickeru\AccessControl\UseCase\GroupDTO::class,
             'allow_extra_fields' => true
         ]);
     }
