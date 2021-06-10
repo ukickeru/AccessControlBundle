@@ -4,6 +4,7 @@ namespace ukickeru\AccessControlBundle\Application\Presenters\Group\Routes;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use ukickeru\AccessControl\Model\Routes\ApplicationRoutesContainer;
+use ukickeru\AccessControlBundle\Model\Service\Collection\ArrayCollection;
 
 class RoutesTransformer implements DataTransformerInterface
 {
@@ -18,7 +19,7 @@ class RoutesTransformer implements DataTransformerInterface
 
     /**
      * @inheritDoc
-     * @param $value array|string[]
+     * @param $value array
      * Трансформирует 1 общий массив доступных маршрутов в RoutesDTO (DTO с маршрутами приложения и кастомными маршрутами)
      */
     public function transform($value)

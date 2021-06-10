@@ -3,8 +3,9 @@
 namespace ukickeru\AccessControlBundle\Tests\Model;
 
 use PHPUnit\Framework\TestCase;
-use ukickeru\AccessControl\Model\Group;
+use ukickeru\AccessControl\Model\GroupInterface;
 use ukickeru\AccessControl\Model\User;
+use ukickeru\AccessControl\Model\UserInterface;
 
 class UserTest extends TestCase
 {
@@ -13,15 +14,15 @@ class UserTest extends TestCase
         'role2'
     ];
 
-    public static function createUserForTest(): User
+    public static function createUserForTest(): UserInterface
     {
         $name = 'test';
         $password = '12345678';
 
         $groupsCreator = new User('test','12345678');
         $groups = [
-            new Group('test1', $groupsCreator),
-            new Group('test1', $groupsCreator)
+            new GroupInterface('test1', $groupsCreator),
+            new GroupInterface('test1', $groupsCreator)
         ];
 
         return new User(
@@ -39,7 +40,7 @@ class UserTest extends TestCase
 
         $groupsCreator = new User('test','12345678');
         $groups = [
-            new Group('test1', $groupsCreator),
+            new GroupInterface('test1', $groupsCreator),
             new Group('test1', $groupsCreator)
         ];
 

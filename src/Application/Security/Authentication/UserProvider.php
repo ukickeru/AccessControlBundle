@@ -6,8 +6,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use ukickeru\AccessControlBundle\Application\Security\Authentication\AuthenticatorUserRepositoryInterface;
-use ukickeru\AccessControlBundle\Application\Security\Authentication\UserAdapter;
+use ukickeru\AccessControlBundle\Model\User;
 
 class UserProvider implements UserProviderInterface
 {
@@ -26,11 +25,11 @@ class UserProvider implements UserProviderInterface
             $user = $this->userRepository->getOneByUsername($username);
         } catch (\Exception $exception) {
             throw new \DomainException(
-                sprintf('User with username "%s", could not be found!', $username)
+                sprintf('Пользователь с именем "%s" не найден!', $username)
             );
         }
 
-        return new UserAdapter($user);
+        return $user;
     }
 
     public function refreshUser(UserInterface $user)
@@ -41,22 +40,22 @@ class UserProvider implements UserProviderInterface
             $user = $this->userRepository->getOneByUsername($username);
         } catch (\Exception $exception) {
             throw new \DomainException(
-                sprintf('User with username "%s", could not be found!', $username)
+                sprintf('Пользователь с именем "%s" не найден!', $username)
             );
         }
 
-        return new UserAdapter($user);
+        return $user;
     }
 
     public function supportsClass(string $class)
     {
-        return $class === UserAdapter::class;
+        return $class === User::class;
     }
 
     public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
     {
-        if (!$user instanceof UserAdapter) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_debug_type($user)));
+        if (!$user instanceof User) {
+            throw new UnsupportedUserException(sprintf('Пользователь класса "%s" не поддерживается!.', get_debug_type($user)));
         }
 
         if ($this->userRepository instanceof PasswordUpgraderInterface) {

@@ -3,41 +3,34 @@
 namespace ukickeru\AccessControlBundle\Application\Presenters\User;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Security\Core\Security;
-use ukickeru\AccessControl\Model\User;
+use ukickeru\AccessControl\UseCase\AccessControlUseCase;
+use ukickeru\AccessControl\UseCase\GroupDTO;
 use ukickeru\AccessControl\UseCase\UserDTO;
-use ukickeru\AccessControl\Model\Group;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use ukickeru\AccessControlBundle\Model\Group;
 
 class UserType extends AbstractType
 {
+    private $accessControlUseCase;
 
-    /** @var Security */
-    private $security;
-
-    public function __construct(Security $security)
+    public function __construct(AccessControlUseCase $accessControlUseCase)
     {
-        $this->security = $security;
+        $this->accessControlUseCase = $accessControlUseCase;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /** @var User $currentUser */
-        $currentUser = $this->security->getUser();
-
         $builder
             ->add('id',HiddenType::class)
-        ;
-
-        $builder
             ->add('username', TextType::class, [
                 'label' => 'Имя',
             ])
@@ -50,11 +43,14 @@ class UserType extends AbstractType
             ])
             ->add('groups', CollectionType::class, [
                 'label' => 'Список групп',
-                'entry_type' => EntityType::class,
+                'entry_type' => ChoiceType::class,
                 'entry_options' => [
                     'label' => 'Группа',
-                    'class' => Group::class
+                    'choice_label' => 'name',
+                    'choice_value' => 'id',
+                    'choices' => $this->accessControlUseCase->getAllGroups()
                 ],
+                'by_reference' => true,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'attr' => [

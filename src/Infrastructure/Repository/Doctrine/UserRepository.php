@@ -5,14 +5,17 @@ namespace ukickeru\AccessControlBundle\Infrastructure\Repository\Doctrine;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use DomainException;
-use ukickeru\AccessControl\Model\User;
+use ukickeru\AccessControlBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ukickeru\AccessControl\Model\User as DomainUser;
+use ukickeru\AccessControl\Model\UserInterface as DomainUserInterface;
 use ukickeru\AccessControl\UseCase\UserRepositoryInterface;
 use ukickeru\AccessControlBundle\Application\Security\Authentication\AuthenticatorUserRepositoryInterface;
+use function get_class;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -28,7 +31,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * @return User[]
+     * @return DomainUserInterface[]
      */
     public function getAll(): array
     {
@@ -37,9 +40,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     /**
      * @param string $id
-     * @return User
+     * @return DomainUserInterface
      */
-    public function getOneById(string $id): User
+    public function getOneById(string $id): DomainUserInterface
     {
         $user = $this->find($id);
 
@@ -52,9 +55,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     /**
      * @param string $username
-     * @return User
+     * @return DomainUserInterface
      */
-    public function getOneByUsername(string $username): User
+    public function getOneByUsername(string $username): DomainUserInterface
     {
         $user = $this->findOneBy(['username' => $username]);
 
@@ -66,12 +69,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * @param User $user
-     * @return User
+     * @param DomainUserInterface $user
+     * @return DomainUserInterface
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function save(User $user): User
+    public function save(DomainUserInterface $user): DomainUserInterface
     {
         $this->_em->persist($user);
         $this->_em->flush();
@@ -80,12 +83,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * @param User $user
-     * @return User
+     * @param DomainUserInterface $user
+     * @return DomainUserInterface
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function update(User $user): User
+    public function update(DomainUserInterface $user): DomainUserInterface
     {
         $this->_em->persist($user);
         $this->_em->flush();
@@ -102,7 +105,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      */
     public function remove(string $id): bool
     {
-        $user = $this->getOne($id);
+        $user = $this->getOneById($id);
 
         $this->_em->remove($user);
         $this->_em->flush();
@@ -119,8 +122,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      */
     public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
     {
-        if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
+        if (!$user instanceof DomainUserInterface) {
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
+        }
+
+        if ($user instanceof DomainUser) {
+            $user = User::createFromDomainUser($user);
         }
 
         $user->setPassword($newEncodedPassword);

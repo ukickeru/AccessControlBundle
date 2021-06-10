@@ -8,9 +8,9 @@ doctrine:
         auto_mapping: true
         mappings:
 
-            AccessControl:
+            AccessControlBundle:
                 is_bundle: false
                 type: yml
                 dir: '%kernel.project_dir%/vendor/ukickeru/access-control-bundle/config/packages/doctrine/mapping'
-                prefix: 'ukickeru\AccessControl\Model'
-                alias: AccessControl
+                prefix: 'ukickeru\AccessControlBundle\Model'
+                alias: AccessControlBundle

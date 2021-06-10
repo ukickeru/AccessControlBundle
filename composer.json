@@ -2,7 +2,7 @@
     "name": "ukickeru/access-control-bundle",
     "type": "symfony-bundle",
     "license": "proprietary",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "minimum-stability": "dev",
     "description": "Symfony bundle for AccessControl",
     "authors": [
@@ -43,7 +43,7 @@
         "symfony/yaml": "5.2.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
-        "ukickeru/access-control": "*"
+        "ukickeru/access-control": "0.2.*"
     },
     "require-dev": {
         "dama/doctrine-test-bundle": "7.0.x-dev",

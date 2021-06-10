@@ -5,10 +5,11 @@ namespace ukickeru\AccessControlBundle\Infrastructure\Repository\Doctrine;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use DomainException;
-use ukickeru\AccessControl\Model\Group;
+use ukickeru\AccessControl\Model\GroupInterface as DomainGroupInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use ukickeru\AccessControl\UseCase\GroupRepositoryInterface;
+use ukickeru\AccessControlBundle\Model\Group;
 
 /**
  * @method Group|null find($id, $lockMode = null, $lockVersion = null)
@@ -24,7 +25,7 @@ class GroupRepository extends ServiceEntityRepository implements GroupRepository
     }
 
     /**
-     * @return Group[]
+     * @return DomainGroupInterface[]
      */
     public function getAll(): array
     {
@@ -33,10 +34,10 @@ class GroupRepository extends ServiceEntityRepository implements GroupRepository
 
     /**
      * @param string $id
-     * @return Group
+     * @return DomainGroupInterface
      * @throws DomainException
      */
-    public function getOneById(string $id): Group
+    public function getOneById(string $id): DomainGroupInterface
     {
         $group = $this->find($id);
 
@@ -48,12 +49,12 @@ class GroupRepository extends ServiceEntityRepository implements GroupRepository
     }
 
     /**
-     * @param Group $group
-     * @return Group
+     * @param DomainGroupInterface $group
+     * @return DomainGroupInterface
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function save(Group $group): Group
+    public function save(DomainGroupInterface $group): DomainGroupInterface
     {
         $this->_em->persist($group);
         $this->_em->flush();
@@ -62,12 +63,12 @@ class GroupRepository extends ServiceEntityRepository implements GroupRepository
     }
 
     /**
-     * @param Group $group
-     * @return Group
+     * @param DomainGroupInterface $group
+     * @return DomainGroupInterface
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function update(Group $group): Group
+    public function update(DomainGroupInterface $group): DomainGroupInterface
     {
         $this->_em->persist($group);
         $this->_em->flush();
@@ -84,7 +85,7 @@ class GroupRepository extends ServiceEntityRepository implements GroupRepository
      */
     public function remove(string $id): bool
     {
-        $group = $this->getOne($id);
+        $group = $this->getOneById($id);
 
         $this->_em->remove($group);
         $this->_em->flush();

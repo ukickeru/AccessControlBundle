@@ -2,9 +2,9 @@
 
 namespace ukickeru\AccessControlBundle\Infrastructure\Controller\Http\Group;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use ukickeru\AccessControlBundle\Application\Presenters\Group\GroupType;
 use ukickeru\AccessControl\UseCase\GroupRepositoryInterface;
-use ukickeru\AccessControlBundle\Infrastructure\Controller\Http\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -61,7 +61,8 @@ class GroupController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->useCase->createGroup($groupDTO);
 
-            return $this->redirectToRoute('group_index');
+            $this->addFlash('notice','Группа была успешно создана!');
+            return $this->index();
         }
 
         return $this->render('@access-control-bundle/Group/new.html.twig', [
@@ -81,7 +82,7 @@ class GroupController extends AbstractController
             $group = $this->useCase->getGroup($id);
         } catch (\Exception $exception) {
             $this->addFlash('error',$exception->getMessage());
-            return $this->redirectToRoute('group_index');
+            return $this->index();
         }
 
         return $this->render('@access-control-bundle/Group/show.html.twig', [
@@ -104,13 +105,15 @@ class GroupController extends AbstractController
             return $this->redirectToRoute('group_index');
         }
 
+        /** @todo Заменить Group на GroupDTO */
         $form = $this->createForm(GroupType::class, $group);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->useCase->editGroup($group);
 
-            return $this->redirectToRoute('group_index');
+            $this->addFlash('notice','Группа была успешно отредактирована!');
+            return $this->index();
         }
 
         return $this->render('@access-control-bundle/Group/edit.html.twig', [
@@ -133,9 +136,10 @@ class GroupController extends AbstractController
             }
         } catch (\Exception $exception) {
             $this->addFlash('error',$exception->getMessage());
-            return $this->redirectToRoute('group_index');
+            return $this->edit($request,$id);
         }
 
-        return $this->redirectToRoute('group_index');
+        $this->addFlash('notice','Группа была успешно удалена!');
+        return $this->index();
     }
 }

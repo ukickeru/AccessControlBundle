@@ -1,18 +1,18 @@
-ukickeru\AccessControl\Model\User:
+ukickeru\AccessControlBundle\Model\User:
   type: entity
   repositoryClass: ukickeru\AccessControlBundle\Infrastructure\Repository\Doctrine\UserRepository
   table: "`user`"
   indexes:
-    name_index:
+    id_index:
       columns: [ id ]
 
   id:
     id:
-      type: integer
+      type: string
       generator:
-        strategy: AUTO
-      options:
-        unsigned: true
+        strategy: CUSTOM
+      customIdGenerator:
+        class: ukickeru\AccessControlBundle\Model\Service\IdGenerator
 
   fields:
     username:
@@ -33,7 +33,10 @@ ukickeru\AccessControl\Model\User:
 
   manyToMany:
     groups:
-      targetEntity: ukickeru\AccessControl\Model\Group
+      targetEntity: ukickeru\AccessControlBundle\Model\Group
+      cascade: ["persist", "merge"]
+      fetch: EAGER
+      inversedBy: users
       joinTable:
         name: users_groups
         joinColumns:
@@ -42,4 +45,3 @@ ukickeru\AccessControl\Model\User:
         inverseJoinColumns:
           group_id:
             referencedColumnName: id
-      fetch: EAGER

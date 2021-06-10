@@ -4,7 +4,7 @@ namespace ukickeru\AccessControlBundle\Tests\Model;
 
 use DateTime;
 use PHPUnit\Framework\TestCase;
-use ukickeru\AccessControl\Model\Group;
+use ukickeru\AccessControl\Model\GroupInterface;
 use ukickeru\AccessControl\Model\Routes\ApplicationRoutesContainer;
 use ukickeru\AccessControl\Model\User;
 
@@ -15,7 +15,7 @@ class GroupTest extends TestCase
         '/test2'
     ];
 
-    public static function createGroupForTest(): Group
+    public static function createGroupForTest(): GroupInterface
     {
         $user = new User('test','12345678');
         $name = 'test';
@@ -27,7 +27,7 @@ class GroupTest extends TestCase
             $user2
         ];
 
-        return new Group(
+        return new GroupInterface(
             $name, $user, self::AVAILABLE_ROUTES, $users
         );
     }
@@ -45,7 +45,7 @@ class GroupTest extends TestCase
             $user2
         ];
 
-        $group = new Group(
+        $group = new GroupInterface(
             $name, $user, self::AVAILABLE_ROUTES, $users
         );
 

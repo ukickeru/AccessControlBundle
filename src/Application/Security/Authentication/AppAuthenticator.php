@@ -2,7 +2,6 @@
 
 namespace ukickeru\AccessControlBundle\Application\Security\Authentication;
 
-use ukickeru\AccessControl\Model\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,17 +17,18 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use ukickeru\AccessControl\Model\Routes\ApplicationRoutesContainer;
+use ukickeru\AccessControlBundle\Infrastructure\Repository\Doctrine\UserRepository;
 
 class AppAuthenticator extends AbstractFormLoginAuthenticator
 {
     use TargetPathTrait;
 
-    public const LOGIN_ROUTE = 'login';
-
     private $entityManager;
     private $urlGenerator;
     private $csrfTokenManager;
     private $passwordEncoder;
+    private $userRepository;
     private $indexPath;
 
     public function __construct(
@@ -36,18 +36,20 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator
         UrlGeneratorInterface $urlGenerator,
         CsrfTokenManagerInterface $csrfTokenManager,
         UserPasswordEncoderInterface $passwordEncoder,
+        UserRepository $userRepository,
         string $indexPath
     ) {
         $this->entityManager = $entityManager;
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->passwordEncoder = $passwordEncoder;
+        $this->userRepository = $userRepository;
         $this->indexPath = $indexPath;
     }
 
     public function supports(Request $request)
     {
-        return self::LOGIN_ROUTE === $request->attributes->get('_route') && $request->isMethod('POST');
+        return ApplicationRoutesContainer::LOGIN_ROUTE_NAME === $request->attributes->get('_route') && $request->isMethod('POST');
     }
 
     public function getCredentials(Request $request)
@@ -79,13 +81,13 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator
             throw new InvalidCsrfTokenException();
         }
 
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
+        $user = $this->userRepository->findOneBy(['username' => $credentials['username']]);
 
         if (!$user) {
             throw new CustomUserMessageAuthenticationException('Username could not be found.');
         }
 
-        return new UserAdapter($user);
+        return $user;
     }
 
     public function getPassword($credentials): ?string
@@ -95,14 +97,12 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator
 
     /**
      * @param mixed $credentials
-     * @param UserInterface|UserAdapter $userAdapter
+     * @param UserInterface $user
      * @return bool
      */
-    public function checkCredentials($credentials, UserInterface $userAdapter)
+    public function checkCredentials($credentials, UserInterface $user)
     {
-        $user = $userAdapter->getUser();
-
-        return $this->passwordEncoder->isPasswordValid($userAdapter, $credentials['password']);
+        return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey)
@@ -116,6 +116,6 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator
 
     protected function getLoginUrl()
     {
-        return $this->urlGenerator->generate(self::LOGIN_ROUTE);
+        return $this->urlGenerator->generate(ApplicationRoutesContainer::LOGIN_ROUTE_NAME);
     }
 }

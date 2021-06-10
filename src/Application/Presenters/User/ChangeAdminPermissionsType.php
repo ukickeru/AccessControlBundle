@@ -8,11 +8,10 @@ use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use ukickeru\AccessControl\Model\User;
 use ukickeru\AccessControl\UseCase\AccessControlUseCase;
 use ukickeru\AccessControl\UseCase\ChangeAdminPermissionsDTO;
-use ukickeru\AccessControl\UseCase\UserDTO;
 use ukickeru\AccessControl\UseCase\UserRepositoryInterface;
+use ukickeru\AccessControlBundle\Model\User;
 
 class ChangeAdminPermissionsType extends AbstractType
 {

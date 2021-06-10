@@ -1,18 +1,18 @@
-ukickeru\AccessControl\Model\Group:
+ukickeru\AccessControlBundle\Model\Group:
   type: entity
   repositoryClass: ukickeru\AccessControlBundle\Infrastructure\Repository\Doctrine\GroupRepository
   table: "`group`"
   indexes:
-    name_index:
+    id_index:
       columns: [ id ]
 
   id:
     id:
-      type: integer
+      type: string
       generator:
-        strategy: AUTO
-      options:
-        unsigned: true
+        strategy: CUSTOM
+      customIdGenerator:
+        class: ukickeru\AccessControlBundle\Model\Service\IdGenerator
 
   fields:
     name:
@@ -24,37 +24,32 @@ ukickeru\AccessControl\Model\Group:
       type: date
       nullable: false
     availableRoutes:
-      type: simple_array
+      type: array
       nullable: true
-
-  oneToOne:
-    parentGroup:
-      targetEntity: ukickeru\AccessControl\Model\Group
-      joinColumn:
-        name: parent_group_id
-        referencedColumnName: id
-        onDelete: SET NULL
 
   manyToOne:
     creator:
-      targetEntity: ukickeru\AccessControl\Model\User
+      targetEntity: ukickeru\AccessControlBundle\Model\User
+      nullable: false
       joinColumn:
         name: creator
         referencedColumnName: id
         onDelete: CASCADE
 
+    parentGroup:
+      targetEntity: ukickeru\AccessControlBundle\Model\Group
+      nullable: true
+      joinColumn:
+        name: parent_group_id
+        referencedColumnName: id
+        onDelete: SET NULL
+
   manyToMany:
     users:
-      targetEntity: ukickeru\AccessControl\Model\User
-      joinTable:
-        name: users_groups
-        cascade: ["persist", "remove"]
-        joinColumns:
-          group_id:
-            referencedColumnName: id
-        inverseJoinColumns:
-          user_id:
-            referencedColumnName: id
+      targetEntity: ukickeru\AccessControlBundle\Model\User
+      cascade: ["persist", "merge"]
+      fetch: EAGER
+      mappedBy: groups
 
   lifecycleCallbacks:
     prePersist: [ setCreationDate ]
