@@ -13,6 +13,7 @@
     ],
     "require": {
         "php": ">=7.2.5",
+        "ext-mbstring": "*",
         "composer/package-versions-deprecated": "1.11.99.1",
         "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.2",
@@ -56,6 +57,12 @@
         "symfony/var-dumper": "^5.2",
         "symfony/web-profiler-bundle": "^5.2"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:ukickeru/AccessControl.git"
+        }
+    ],
     "config": {
         "sort-packages": true
     },
