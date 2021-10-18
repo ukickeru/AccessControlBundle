@@ -43,6 +43,7 @@ class AuthenticationController extends AbstractController
      */
     public function login(): Response
     {
+
         if ($this->getUser()) {
             return $this->redirectToRoute($this->pathToRedirectAfterLogin);
         }

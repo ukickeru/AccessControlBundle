@@ -1,4 +1,5 @@
 <?php
+
 namespace ukickeru\AccessControlBundle\DependencyInjection;
 
 use Exception;
@@ -16,7 +17,7 @@ class AccessControlExtension extends Extension implements PrependExtensionInterf
     {
         $loader = new YamlFileLoader(
             $container,
-            new FileLocator(__DIR__.'/../../config/packages')
+            new FileLocator(__DIR__ . '/../../config/packages')
         );
         $loader->load('doctrine.yaml');
         $loader->load('security.yaml');
@@ -26,7 +27,7 @@ class AccessControlExtension extends Extension implements PrependExtensionInterf
     /**
      * Loads a specific configuration.
      *
-     * @param array $configs
+     * @param array            $configs
      * @param ContainerBuilder $container
      * @throws Exception
      */
@@ -34,7 +35,7 @@ class AccessControlExtension extends Extension implements PrependExtensionInterf
     {
         $loader = new YamlFileLoader(
             $container,
-            new FileLocator(__DIR__.'/../../config')
+            new FileLocator(__DIR__ . '/../../config')
         );
         $loader->load('services.yaml');
 
@@ -43,13 +44,13 @@ class AccessControlExtension extends Extension implements PrependExtensionInterf
 
         $definition = $container->getDefinition(AppAuthenticator::class);
         $definition->setArguments([
-          '$indexPath' => $config['paths']['index_path'],
+            '$indexPath' => $config['paths']['index_path'],
         ]);
-        
+
         $definition = $container->getDefinition(AuthenticationController::class);
         $definition->setArguments([
-          '$pathToRedirectAfterLogin' => $config['paths']['redirect_after_login_path'],
-          '$pathToRedirectAfterLogout' => $config['paths']['redirect_after_logout_path'],
+            '$pathToRedirectAfterLogin' => $config['paths']['redirect_after_login_path'],
+            '$pathToRedirectAfterLogout' => $config['paths']['redirect_after_logout_path'],
         ]);
     }
 }

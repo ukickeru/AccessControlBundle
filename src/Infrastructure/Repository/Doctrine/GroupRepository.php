@@ -58,7 +58,7 @@ class GroupRepository extends ServiceEntityRepository implements GroupRepository
     {
         $this->_em->persist($group);
         $this->_em->flush();
-        
+
         return $group;
     }
 

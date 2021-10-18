@@ -8,7 +8,7 @@ use ukickeru\AccessControl\Model\UserInterface as DomainUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ukickeru\AccessControlBundle\Model\Service\Collection\ArrayCollection;
 
-class User extends DomainUser implements DomainUserInterface, UserInterface
+class User extends DomainUser implements UserInterface
 {
     public function __construct(
         string $username,

@@ -119,7 +119,7 @@ class UserController extends AbstractController
             $user = $this->useCase->getUser($id);
         } catch (\Exception $exception) {
             $this->addFlash('error',$exception->getMessage());
-            return $this->redirectToRoute('group_index');
+            return $this->redirectToRoute('user_index');
         }
 
         $form = $this->createForm(UserType::class, $user);

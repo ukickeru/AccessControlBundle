@@ -1,4 +1,5 @@
 <?php
+
 namespace ukickeru\AccessControlBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;

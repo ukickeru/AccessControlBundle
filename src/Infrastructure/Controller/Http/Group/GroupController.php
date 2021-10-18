@@ -105,7 +105,6 @@ class GroupController extends AbstractController
             return $this->redirectToRoute('group_index');
         }
 
-        /** @todo Заменить Group на GroupDTO */
         $form = $this->createForm(GroupType::class, $group);
         $form->handleRequest($request);
 
@@ -113,7 +112,7 @@ class GroupController extends AbstractController
             $this->useCase->editGroup($group);
 
             $this->addFlash('notice','Группа была успешно отредактирована!');
-            return $this->index();
+            return $this->redirectToRoute('group_index');
         }
 
         return $this->render('@access-control-bundle/Group/edit.html.twig', [
